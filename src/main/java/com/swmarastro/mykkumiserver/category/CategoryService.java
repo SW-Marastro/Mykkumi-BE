@@ -1,6 +1,7 @@
 
 package com.swmarastro.mykkumiserver.category;
 
+import com.swmarastro.mykkumiserver.category.domain.UserSubCategory;
 import com.swmarastro.mykkumiserver.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

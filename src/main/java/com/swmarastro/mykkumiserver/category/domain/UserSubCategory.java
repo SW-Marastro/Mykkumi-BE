@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumiserver.category;
+package com.swmarastro.mykkumiserver.category.domain;
 
 import com.swmarastro.mykkumiserver.user.User;
 import jakarta.persistence.*;

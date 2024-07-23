@@ -2,7 +2,7 @@ package com.swmarastro.mykkumiserver.user;
 
 import com.swmarastro.mykkumiserver.auth.OAuthProvider;
 import com.swmarastro.mykkumiserver.category.CategoryService;
-import com.swmarastro.mykkumiserver.category.UserSubCategory;
+import com.swmarastro.mykkumiserver.category.domain.UserSubCategory;
 import com.swmarastro.mykkumiserver.category.UserSubCategoryRepository;
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
