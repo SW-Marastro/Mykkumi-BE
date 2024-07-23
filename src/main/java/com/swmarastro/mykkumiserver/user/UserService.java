@@ -85,7 +85,6 @@ public class UserService {
         String uploadUrl;
         //이미지 업로드
         try {
-            System.out.println("image upload 시도한다");
             uploadUrl = awsS3Utils.upload(file, PROFILE_IMAGE_PATH);
         } catch (IOException e) {
             e.printStackTrace();
