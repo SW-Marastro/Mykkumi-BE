@@ -1,7 +1,7 @@
 package com.swmarastro.mykkumiserver.user;
 
 import com.swmarastro.mykkumiserver.auth.OAuthProvider;
-import com.swmarastro.mykkumiserver.category.UserSubCategory;
+import com.swmarastro.mykkumiserver.category.domain.UserSubCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

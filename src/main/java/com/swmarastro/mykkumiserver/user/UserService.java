@@ -2,7 +2,7 @@ package com.swmarastro.mykkumiserver.user;
 
 import com.swmarastro.mykkumiserver.auth.OAuthProvider;
 import com.swmarastro.mykkumiserver.category.CategoryService;
-import com.swmarastro.mykkumiserver.category.UserSubCategory;
+import com.swmarastro.mykkumiserver.category.domain.UserSubCategory;
 import com.swmarastro.mykkumiserver.category.UserSubCategoryRepository;
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
@@ -85,7 +85,6 @@ public class UserService {
         String uploadUrl;
         //이미지 업로드
         try {
-            System.out.println("image upload 시도한다");
             uploadUrl = awsS3Utils.upload(file, PROFILE_IMAGE_PATH);
         } catch (IOException e) {
             e.printStackTrace();
