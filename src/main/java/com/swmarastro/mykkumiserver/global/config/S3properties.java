@@ -20,4 +20,11 @@ public class S3properties {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    @Value("${aws.s3.post-image-path}")
+    private String postImagePath;
+
+    @Value("${aws.s3.profile-image-path}")
+    private String profileImagePath;
 }
+
