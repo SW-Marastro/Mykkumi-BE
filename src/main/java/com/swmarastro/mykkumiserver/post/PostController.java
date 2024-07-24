@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumiserver.post;
 
+import com.swmarastro.mykkumiserver.post.dto.PostImagePreSignedUrlResponse;
 import com.swmarastro.mykkumiserver.post.dto.PostListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
     private final PostService postService;
+    private final PostImageService postImageService;
 
     /**
      * 홈화면 무한스크롤 포스트, 일단 모든 카테고리 최신순
@@ -27,5 +29,12 @@ public class PostController {
     public ResponseEntity<PostListResponse> getPosts(@RequestParam(required = false) String cursor, @RequestParam(required = false, defaultValue = "5") Integer limit) {
         PostListResponse infiniteScrollPosts = postService.getInfiniteScrollPosts(cursor, limit);
         return ResponseEntity.ok(infiniteScrollPosts);
+    }
+
+    @GetMapping("/posts/preSignedUrl")
+    public ResponseEntity<PostImagePreSignedUrlResponse> getPostImagePreSignedUrl(@RequestParam String extension) {
+        String url = postImageService.generatePostImagePreSignedUrl(extension);
+        PostImagePreSignedUrlResponse postImagePreSignedUrlResponse = PostImagePreSignedUrlResponse.of(url);
+        return ResponseEntity.ok(postImagePreSignedUrlResponse);
     }
 }
