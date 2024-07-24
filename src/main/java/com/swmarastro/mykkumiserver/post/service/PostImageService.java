@@ -1,4 +1,4 @@
-package com.swmarastro.mykkumiserver.post;
+package com.swmarastro.mykkumiserver.post.service;
 
 import com.swmarastro.mykkumiserver.global.config.S3properties;
 import com.swmarastro.mykkumiserver.global.util.AwsS3Utils;

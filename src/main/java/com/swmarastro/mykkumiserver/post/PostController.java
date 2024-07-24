@@ -2,6 +2,8 @@ package com.swmarastro.mykkumiserver.post;
 
 import com.swmarastro.mykkumiserver.post.dto.PostImagePreSignedUrlResponse;
 import com.swmarastro.mykkumiserver.post.dto.PostListResponse;
+import com.swmarastro.mykkumiserver.post.service.PostImageService;
+import com.swmarastro.mykkumiserver.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

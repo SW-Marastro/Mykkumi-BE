@@ -1,8 +1,10 @@
-package com.swmarastro.mykkumiserver.post;
+package com.swmarastro.mykkumiserver.post.service;
 
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
 import com.swmarastro.mykkumiserver.global.util.Base64Utils;
+import com.swmarastro.mykkumiserver.post.PostLatestCursor;
+import com.swmarastro.mykkumiserver.post.PostRepository;
 import com.swmarastro.mykkumiserver.post.domain.Post;
 import com.swmarastro.mykkumiserver.post.dto.PostDto;
 import com.swmarastro.mykkumiserver.post.dto.PostListResponse;
