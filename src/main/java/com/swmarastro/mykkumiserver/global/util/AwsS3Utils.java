@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumiserver.global.util;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.swmarastro.mykkumiserver.global.config.S3properties;
@@ -9,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 @Component
@@ -35,5 +38,15 @@ public class AwsS3Utils {
         objMeta.setContentLength(file.getInputStream().available());
         amazonS3.putObject(s3properties.getBucket(), s3FileName, file.getInputStream(), objMeta);
         return s3FileName;
+    }
+
+    /**
+     * preSignedUrl 발급 _ 10분간 유효
+     */
+    public String generatePreSignedUrl(String filePath, String bucketName) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MINUTE, 10); //10분간 유효함
+        return amazonS3.generatePresignedUrl(bucketName, filePath, calendar.getTime(), HttpMethod.PUT).toString();
     }
 }
