@@ -1,14 +1,16 @@
 package com.swmarastro.mykkumiserver.post;
 
+import com.swmarastro.mykkumiserver.post.dto.PostImagePreSignedUrlResponse;
 import com.swmarastro.mykkumiserver.post.dto.PostListResponse;
+import com.swmarastro.mykkumiserver.post.dto.ValidatePostImageUrlRequest;
+import com.swmarastro.mykkumiserver.post.dto.ValidatePostImageUrlResponse;
+import com.swmarastro.mykkumiserver.post.service.PostImageService;
+import com.swmarastro.mykkumiserver.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "posts", description = "포스트 API")
 @RestController
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
     private final PostService postService;
+    private final PostImageService postImageService;
 
     /**
      * 홈화면 무한스크롤 포스트, 일단 모든 카테고리 최신순
@@ -28,4 +31,19 @@ public class PostController {
         PostListResponse infiniteScrollPosts = postService.getInfiniteScrollPosts(cursor, limit);
         return ResponseEntity.ok(infiniteScrollPosts);
     }
+
+    @GetMapping("/posts/preSignedUrl")
+    public ResponseEntity<PostImagePreSignedUrlResponse> getPostImagePreSignedUrl(@RequestParam String extension) {
+        String url = postImageService.generatePostImagePreSignedUrl(extension);
+        PostImagePreSignedUrlResponse postImagePreSignedUrlResponse = PostImagePreSignedUrlResponse.of(url);
+        return ResponseEntity.ok(postImagePreSignedUrlResponse);
+    }
+
+    @PostMapping("/posts/imageUrl/validate")
+    public ResponseEntity<ValidatePostImageUrlResponse> validatePostImageUrl(@RequestBody ValidatePostImageUrlRequest request) {
+        Boolean isValid = postImageService.validatePostImageUrl(request);
+        ValidatePostImageUrlResponse validatePostImageUrlResponse = ValidatePostImageUrlResponse.of(isValid);
+        return ResponseEntity.ok(validatePostImageUrlResponse);
+    }
+
 }

@@ -78,3 +78,8 @@ springdoc:
 jwt:
   issuer: ${jwt_issuer}
   secret_key: ${jwt_secret_key}
+
+aws:
+  s3:
+    post-image-path: ${s3_post_image_path}
+    profile-image-path: ${s3_profile_image_path}
