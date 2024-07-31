@@ -59,12 +59,12 @@ public class AppleService {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
-            ResponseEntity<String> response = restTemplate.exchange(
+            ResponseEntity<String> response = restTemplate.exchange( //TODO 에러응답 넘어오는 거 받기
                     "https://appleid.apple.com/auth/token",
                     HttpMethod.POST,
                     httpEntity,
                     String.class
-            );
+            ); //TODO object로 바로 받을 수 있는지 찾아보기
 
             JSONObject jsonObj = (JSONObject) jsonParser.parse(response.getBody());
             accessToken = String.valueOf(jsonObj.get("access_token"));

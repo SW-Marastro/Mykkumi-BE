@@ -49,7 +49,8 @@ spring:
             private-key: ${apple_private_key}
 
 server:
-  port: 8080
+  port: 8080 #이거를 그냥 443으로 바꿀수도? 아니면 프론트에서 그냥 :20080뭐 이런거 달아서 보내도록 하고 여기서 20080???
+
 
 cloud:
   aws:
