@@ -76,6 +76,19 @@ public class PostService {
         return savedPost.getId();
     }
 
+    public void deletePost(User user, Long postId) {
+        //본인의 포스트인지, 이미 삭제된 포스트는 아닌지 확인
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CommonException(ErrorCode.INVALID_VALUE, "존재하지 않는 게시글입니다.", "해당 id의 게시글이 존재하지 않습니다."));
+        if(post.getUser()!=user)
+            throw new CommonException(ErrorCode.ACCESS_DENIED, "본인이 작성한 게시글만 삭제 가능합니다.", "삭제 권한이 없습니다. 본인이 작성한 게시글만 삭제 가능합니다.");
+        if(post.getIsDeleted())
+            throw new CommonException(ErrorCode.INVALID_VALUE, "존재하지 않는 게시글입니다.", "해당 id의 게시글이 존재하지 않습니다.");
+
+        //소프트 딜리트
+        post.deletePost();
+    }
+
     private PostLatestCursor getCursorFromBase64String(String encodedCursor) {
         if(encodedCursor==null || encodedCursor.isEmpty())
             return PostLatestCursor.of(LocalDateTime.now(), Long.MAX_VALUE);
