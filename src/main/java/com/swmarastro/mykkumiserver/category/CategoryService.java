@@ -5,6 +5,8 @@ import com.swmarastro.mykkumiserver.category.domain.Category;
 import com.swmarastro.mykkumiserver.category.domain.SubCategory;
 import com.swmarastro.mykkumiserver.category.domain.UserSubCategory;
 import com.swmarastro.mykkumiserver.category.dto.CategoryDto;
+import com.swmarastro.mykkumiserver.global.exception.CommonException;
+import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
 import com.swmarastro.mykkumiserver.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
     private final UserSubCategoryRepository userSubCategoryRepository;
 
     //회원가입 시 생성됨, 카테고리 초기 null 상태
@@ -43,6 +46,11 @@ public class CategoryService {
                 })
                 .collect(Collectors.toList());
 
+    }
+
+    public SubCategory getSubCategoryById(Long id) {
+        return subCategoryRepository.findById(id)
+                .orElseThrow(() -> new CommonException(ErrorCode.INVALID_VALUE, "해당 카테고리를 찾을 수 없습니다.", "해당 id의 카테고리가 존재하지 않습니다."));
     }
 
 }
