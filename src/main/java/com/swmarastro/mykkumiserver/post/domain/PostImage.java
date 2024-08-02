@@ -1,11 +1,18 @@
 package com.swmarastro.mykkumiserver.post.domain;
 
+import com.swmarastro.mykkumiserver.global.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
-public class PostImage {
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+public class PostImage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,4 +24,24 @@ public class PostImage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    private Long orderList;
+
+    @OneToMany(mappedBy = "postImage", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pin> pins = new ArrayList<>();
+
+    public static PostImage of(String url, Long orderList) {
+        return PostImage.builder()
+                .imageUrl(url)
+                .orderList(orderList)
+                .build();
+    }
+
+    public void addPins(List<Pin> pins) {
+        this.pins = pins;
+    }
+
+    public void addPost(Post post) {
+        this.post = post;
+    }
 }

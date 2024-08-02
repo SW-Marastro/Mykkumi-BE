@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumiserver.category.domain;
 
+import com.swmarastro.mykkumiserver.global.BaseEntity;
 import com.swmarastro.mykkumiserver.post.domain.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Entity
-public class SubCategory {
+public class SubCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
