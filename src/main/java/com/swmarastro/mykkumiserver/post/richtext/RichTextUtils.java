@@ -56,7 +56,7 @@ public class RichTextUtils {
         for (String token : tokens) {
             PostContentObject text;
             if (token.startsWith("#")) {
-                text = new PostContentHashtagText(token, POST_CONTENT_HASHTAG_COLOR, POST_HASHTAG_URL_PREFIX); //이 줄 작성 중이야
+                text = new PostContentHashtagText(token, POST_CONTENT_HASHTAG_COLOR, POST_HASHTAG_URL_PREFIX);
             } else {
                 text = new PostContentPlainText(token);
             }
