@@ -17,6 +17,9 @@ public enum ErrorCode {
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED),
 
+    //403 FORBIDDEN
+    ACCESS_DENIED(HttpStatus.FORBIDDEN),
+
     // 404 NOT FOUND
     NOT_FOUND(HttpStatus.NOT_FOUND),
 

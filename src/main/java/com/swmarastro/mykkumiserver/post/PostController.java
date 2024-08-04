@@ -1,11 +1,10 @@
 package com.swmarastro.mykkumiserver.post;
 
-import com.swmarastro.mykkumiserver.post.dto.PostImagePreSignedUrlResponse;
-import com.swmarastro.mykkumiserver.post.dto.PostListResponse;
-import com.swmarastro.mykkumiserver.post.dto.ValidatePostImageUrlRequest;
-import com.swmarastro.mykkumiserver.post.dto.ValidatePostImageUrlResponse;
+import com.swmarastro.mykkumiserver.auth.Login;
+import com.swmarastro.mykkumiserver.post.dto.*;
 import com.swmarastro.mykkumiserver.post.service.PostImageService;
 import com.swmarastro.mykkumiserver.post.service.PostService;
+import com.swmarastro.mykkumiserver.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -46,4 +45,15 @@ public class PostController {
         return ResponseEntity.ok(validatePostImageUrlResponse);
     }
 
+    @PostMapping("/posts")
+    public ResponseEntity<RegisterPostResponse> registerPost(@Login User user, @RequestBody RegisterPostRequest request) {
+        Long savedPostId = postService.registerPost(user, request.getSubCategoryId(), request.getContent(), request.getImages());
+        return ResponseEntity.ok().body(RegisterPostResponse.of(savedPostId));
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<Void> deletePost(@Login User user, @PathVariable Long postId) {
+        postService.deletePost(user, postId);
+        return ResponseEntity.noContent().build();
+    }
 }

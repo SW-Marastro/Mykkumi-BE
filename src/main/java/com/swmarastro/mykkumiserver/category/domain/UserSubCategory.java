@@ -1,11 +1,9 @@
 package com.swmarastro.mykkumiserver.category.domain;
 
+import com.swmarastro.mykkumiserver.global.BaseEntity;
 import com.swmarastro.mykkumiserver.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,9 +12,9 @@ import java.util.stream.Collectors;
 @Getter
 @Entity
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserSubCategory {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+public class UserSubCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

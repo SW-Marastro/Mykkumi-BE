@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumiserver.post.dto;
 
 import com.swmarastro.mykkumiserver.post.domain.Post;
+import com.swmarastro.mykkumiserver.post.richtext.PostContentObject;
 import com.swmarastro.mykkumiserver.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class PostDto {
     private String category;
     private String subCategory;
     private Writer writer;
-    private String content;
+    private List<PostContentObject> content;
 
     public static PostDto of(Post post, User writer) {
         return PostDto.builder()
