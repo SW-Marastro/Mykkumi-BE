@@ -7,6 +7,7 @@ import com.swmarastro.mykkumiserver.category.UserSubCategoryRepository;
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
 import com.swmarastro.mykkumiserver.global.util.AwsS3Utils;
+import com.swmarastro.mykkumiserver.user.dto.MeResponse;
 import com.swmarastro.mykkumiserver.user.dto.UpdateUserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,10 @@ public class UserService {
     public User getUserByUuid(UUID uuid) {
         return userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND, "유저가 존재하지 않습니다.", "해당 uuid의 유저가 존재하지 않습니다."));
+    }
+
+    public MeResponse getMe(User user) {
+        return MeResponse.of(user);
     }
 
     public User saveUser(OAuthProvider provider, String email) {
