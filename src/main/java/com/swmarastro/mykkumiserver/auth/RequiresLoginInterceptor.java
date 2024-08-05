@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumiserver.auth;
 
+import com.swmarastro.mykkumiserver.auth.annotation.RequiresLogin;
 import com.swmarastro.mykkumiserver.auth.token.TokenService;
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;

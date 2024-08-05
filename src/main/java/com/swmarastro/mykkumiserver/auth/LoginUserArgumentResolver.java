@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumiserver.auth;
 
+import com.swmarastro.mykkumiserver.auth.annotation.Login;
 import com.swmarastro.mykkumiserver.auth.token.TokenService;
 import com.swmarastro.mykkumiserver.user.User;
 import com.swmarastro.mykkumiserver.user.UserService;

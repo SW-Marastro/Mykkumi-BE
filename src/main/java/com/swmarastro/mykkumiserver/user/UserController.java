@@ -1,8 +1,6 @@
 package com.swmarastro.mykkumiserver.user;
 
-import com.swmarastro.mykkumiserver.auth.Login;
-import com.swmarastro.mykkumiserver.global.exception.CommonException;
-import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
+import com.swmarastro.mykkumiserver.auth.annotation.Login;
 import com.swmarastro.mykkumiserver.user.dto.MeResponse;
 import com.swmarastro.mykkumiserver.user.dto.UpdateUserRequest;
 import jakarta.validation.Valid;

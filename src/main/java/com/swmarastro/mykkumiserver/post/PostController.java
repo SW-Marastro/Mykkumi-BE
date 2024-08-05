@@ -1,7 +1,7 @@
 package com.swmarastro.mykkumiserver.post;
 
-import com.swmarastro.mykkumiserver.auth.Login;
-import com.swmarastro.mykkumiserver.auth.RequiresLogin;
+import com.swmarastro.mykkumiserver.auth.annotation.Login;
+import com.swmarastro.mykkumiserver.auth.annotation.RequiresLogin;
 import com.swmarastro.mykkumiserver.post.dto.*;
 import com.swmarastro.mykkumiserver.post.service.PostImageService;
 import com.swmarastro.mykkumiserver.post.service.PostService;
