@@ -32,13 +32,15 @@ public class PostController {
         return ResponseEntity.ok(infiniteScrollPosts);
     }
 
+    @RequiresLogin
     @GetMapping("/posts/preSignedUrl")
-    public ResponseEntity<PostImagePreSignedUrlResponse> getPostImagePreSignedUrl(@Login User user, @RequestParam String extension) {
+    public ResponseEntity<PostImagePreSignedUrlResponse> getPostImagePreSignedUrl(@RequestParam String extension) {
         String url = postImageService.generatePostImagePreSignedUrl(extension);
         PostImagePreSignedUrlResponse postImagePreSignedUrlResponse = PostImagePreSignedUrlResponse.of(url);
         return ResponseEntity.ok(postImagePreSignedUrlResponse);
     }
 
+    @RequiresLogin
     @PostMapping("/posts/imageUrl/validate")
     public ResponseEntity<ValidatePostImageUrlResponse> validatePostImageUrl(@RequestBody ValidatePostImageUrlRequest request) {
         Boolean isValid = postImageService.validatePostImageUrl(request);
@@ -53,6 +55,7 @@ public class PostController {
         return ResponseEntity.ok().body(RegisterPostResponse.of(savedPostId));
     }
 
+    @RequiresLogin
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<Void> deletePost(@Login User user, @PathVariable Long postId) {
         postService.deletePost(user, postId);
