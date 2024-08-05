@@ -32,7 +32,7 @@ public class PostController {
     }
 
     @GetMapping("/posts/preSignedUrl")
-    public ResponseEntity<PostImagePreSignedUrlResponse> getPostImagePreSignedUrl(@RequestParam String extension) {
+    public ResponseEntity<PostImagePreSignedUrlResponse> getPostImagePreSignedUrl(@Login User user, @RequestParam String extension) {
         String url = postImageService.generatePostImagePreSignedUrl(extension);
         PostImagePreSignedUrlResponse postImagePreSignedUrlResponse = PostImagePreSignedUrlResponse.of(url);
         return ResponseEntity.ok(postImagePreSignedUrlResponse);
