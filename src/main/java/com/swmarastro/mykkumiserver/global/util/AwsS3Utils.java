@@ -8,6 +8,7 @@ import com.swmarastro.mykkumiserver.global.config.S3properties;
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AwsS3Utils {
 
     private final AmazonS3 amazonS3;
@@ -52,6 +54,18 @@ public class AwsS3Utils {
         calendar.setTime(new Date());
         calendar.add(Calendar.MINUTE, 10); //10분간 유효함
         return amazonS3.generatePresignedUrl(bucketName, filePath, calendar.getTime(), HttpMethod.PUT).toString();
+    }
+
+    /**
+     * S3에서 이미지 삭제
+     */
+    public void deleteImageByUrl(String url) {
+        try {
+            String objectKey = getObjectKeyFromUrl(url);
+            amazonS3.deleteObject(s3properties.getBucket(), objectKey);
+        } catch (Exception e) {
+            log.info("이미지 삭제 중 에러 발생 "+e.getMessage());
+        }
     }
 
     public Boolean isValidUrl(String url, String hashCode) {

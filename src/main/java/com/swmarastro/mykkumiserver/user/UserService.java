@@ -55,21 +55,24 @@ public class UserService {
     public User updateUser(User user, UpdateUserRequest updateUserRequest) {
         String nickname = updateUserRequest.getNickname();
         String introduction = updateUserRequest.getIntroduction();
-        String imageUrl = updateUserRequest.getProfileImage();
+        String profileImageUrl = updateUserRequest.getProfileImage();
         List<Long> categoryIds = updateUserRequest.getCategoryIds();
-
-        System.out.println(nickname+" "+introduction+" "+imageUrl);
 
         //중복된 닉네임일 때
         if (nickname != null && isNicknameExists(nickname)) {
             throw new CommonException(ErrorCode.DUPLICATE_VALUE, "이미 사용 중인 닉네임입니다.", "이미 사용 중인 닉네임입니다.");
         }
 
+        //프로필 이미지 이미 존재 시, 기존 이미지 삭제
+        if(profileImageUrl != null && user.getProfileImage()!=null) {
+            awsS3Utils.deleteImageByUrl(user.getProfileImage());
+        }
+
         //유저가 선택한 카테고리 update
         UserSubCategory userSubCategory = userSubCategoryRepository.findByUser(user);
         userSubCategory.updateSubCategory(categoryIds);
 
-        user.updateUser(nickname, introduction, imageUrl);
+        user.updateUser(nickname, introduction, profileImageUrl);
         return user;
     }
 
