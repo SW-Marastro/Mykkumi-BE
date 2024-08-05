@@ -55,8 +55,10 @@ public class UserService {
     public User updateUser(User user, UpdateUserRequest updateUserRequest) {
         String nickname = updateUserRequest.getNickname();
         String introduction = updateUserRequest.getIntroduction();
-        String imageUrl = null;
+        String imageUrl = updateUserRequest.getProfileImage();
         List<Long> categoryIds = updateUserRequest.getCategoryIds();
+
+        System.out.println(nickname+" "+introduction+" "+imageUrl);
 
         //중복된 닉네임일 때
         if (nickname != null && isNicknameExists(nickname)) {
@@ -66,11 +68,6 @@ public class UserService {
         //유저가 선택한 카테고리 update
         UserSubCategory userSubCategory = userSubCategoryRepository.findByUser(user);
         userSubCategory.updateSubCategory(categoryIds);
-
-        //프로필 이미지 S3 업로드
-        if (updateUserRequest.getProfileImage() != null) {
-            imageUrl = uploadProfileImage(updateUserRequest.getProfileImage());
-        }
 
         user.updateUser(nickname, introduction, imageUrl);
         return user;
