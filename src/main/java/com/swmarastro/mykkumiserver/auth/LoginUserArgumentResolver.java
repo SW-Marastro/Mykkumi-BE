@@ -1,8 +1,6 @@
 package com.swmarastro.mykkumiserver.auth;
 
 import com.swmarastro.mykkumiserver.auth.token.TokenService;
-import com.swmarastro.mykkumiserver.global.exception.CommonException;
-import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
 import com.swmarastro.mykkumiserver.user.User;
 import com.swmarastro.mykkumiserver.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,6 +41,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
                 return user;
             }
         }
-        throw new CommonException(ErrorCode.AUTHENTICATION_REQUIRED, "로그인 후 이용 가능합니다.", "로그인 후 이용 가능합니다.");
+        return null;
     }
 }

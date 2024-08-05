@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumiserver.post;
 
 import com.swmarastro.mykkumiserver.auth.Login;
+import com.swmarastro.mykkumiserver.auth.RequiresLogin;
 import com.swmarastro.mykkumiserver.post.dto.*;
 import com.swmarastro.mykkumiserver.post.service.PostImageService;
 import com.swmarastro.mykkumiserver.post.service.PostService;
@@ -45,6 +46,7 @@ public class PostController {
         return ResponseEntity.ok(validatePostImageUrlResponse);
     }
 
+    @RequiresLogin
     @PostMapping("/posts")
     public ResponseEntity<RegisterPostResponse> registerPost(@Login User user, @RequestBody RegisterPostRequest request) {
         Long savedPostId = postService.registerPost(user, request.getSubCategoryId(), request.getContent(), request.getImages());
