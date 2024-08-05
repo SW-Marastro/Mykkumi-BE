@@ -1,6 +1,7 @@
 package com.swmarastro.mykkumiserver.post;
 
-import com.swmarastro.mykkumiserver.auth.Login;
+import com.swmarastro.mykkumiserver.auth.annotation.Login;
+import com.swmarastro.mykkumiserver.auth.annotation.RequiresLogin;
 import com.swmarastro.mykkumiserver.post.dto.*;
 import com.swmarastro.mykkumiserver.post.service.PostImageService;
 import com.swmarastro.mykkumiserver.post.service.PostService;
@@ -31,6 +32,7 @@ public class PostController {
         return ResponseEntity.ok(infiniteScrollPosts);
     }
 
+    @RequiresLogin
     @GetMapping("/posts/preSignedUrl")
     public ResponseEntity<PostImagePreSignedUrlResponse> getPostImagePreSignedUrl(@RequestParam String extension) {
         String url = postImageService.generatePostImagePreSignedUrl(extension);
@@ -38,6 +40,7 @@ public class PostController {
         return ResponseEntity.ok(postImagePreSignedUrlResponse);
     }
 
+    @RequiresLogin
     @PostMapping("/posts/imageUrl/validate")
     public ResponseEntity<ValidatePostImageUrlResponse> validatePostImageUrl(@RequestBody ValidatePostImageUrlRequest request) {
         Boolean isValid = postImageService.validatePostImageUrl(request);
@@ -45,12 +48,14 @@ public class PostController {
         return ResponseEntity.ok(validatePostImageUrlResponse);
     }
 
+    @RequiresLogin
     @PostMapping("/posts")
     public ResponseEntity<RegisterPostResponse> registerPost(@Login User user, @RequestBody RegisterPostRequest request) {
         Long savedPostId = postService.registerPost(user, request.getSubCategoryId(), request.getContent(), request.getImages());
         return ResponseEntity.ok().body(RegisterPostResponse.of(savedPostId));
     }
 
+    @RequiresLogin
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<Void> deletePost(@Login User user, @PathVariable Long postId) {
         postService.deletePost(user, postId);
