@@ -10,6 +10,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,9 +41,9 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImages = new ArrayList<>();
 
-    public List<String> getPostImageUrls() {
+    public List<PostImage> getOrderedPostImages() {
         return postImages.stream()
-                .map(PostImage::getImageUrl)
+                .sorted(Comparator.comparing(PostImage::getOrderList))
                 .collect(Collectors.toList());
     }
 
