@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Schema(description = "포스트 하나 DTO")
 @Getter
@@ -15,16 +16,21 @@ import java.util.List;
 public class PostDto {
 
     private Long id;
-    private List<String> images;
     private String category;
     private String subCategory;
     private Writer writer;
     private List<PostContentObject> content;
+    private List<PostImageDto> images;
 
     public static PostDto of(Post post, User writer) {
+
+        List<PostImageDto> postImageDtos = post.getOrderedPostImages().stream()
+                .map(PostImageDto::of)
+                .collect(Collectors.toList());
+
         return PostDto.builder()
                 .id(post.getId())
-                .images(post.getPostImageUrls())
+                .images(postImageDtos)
                 .subCategory(post.getSubCategory().getName())
                 .category(post.getSubCategory().getCategory().getName()) //TODO 너무 .get.get인지 고민
                 .content(post.getContent())
