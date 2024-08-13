@@ -27,8 +27,8 @@ public class PostController {
     @Operation(summary = "포스트 최신순 무한스크롤", description = "cursor와 limit로 무한스크롤 포스트를 불러옵니다." +
             "cursor와 limit 값은 null이어도 되며, cursor가 null이면 무한스크롤 시작입니다. limit 미입력시 기본값은 5입니다.")
     @GetMapping("/posts")
-    public ResponseEntity<PostListResponse> getPosts(@RequestParam(required = false) String cursor, @RequestParam(required = false, defaultValue = "5") Integer limit) {
-        PostListResponse infiniteScrollPosts = postService.getInfiniteScrollPosts(cursor, limit);
+    public ResponseEntity<PostListResponse> getPosts(@Login User user, @RequestParam(required = false) String cursor, @RequestParam(required = false, defaultValue = "5") Integer limit) {
+        PostListResponse infiniteScrollPosts = postService.getInfiniteScrollPosts(user, cursor, limit);
         return ResponseEntity.ok(infiniteScrollPosts);
     }
 

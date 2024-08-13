@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PostLatestCursor {
 
-    private LocalDateTime startedAt; //TODO 후에 좋아요순 정렬 등을 위해 생성했는데 여기에 두는 것이 맞을까? 당장은 필요가 없다.
+    private LocalDateTime startedAt;
     private Long postId;
 
     public static PostLatestCursor of(LocalDateTime startedAt, Long postId) {
