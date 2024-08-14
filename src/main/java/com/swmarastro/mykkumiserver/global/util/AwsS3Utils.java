@@ -18,6 +18,8 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
@@ -66,6 +68,26 @@ public class AwsS3Utils {
         } catch (Exception e) {
             log.info("이미지 삭제 중 에러 발생 "+e.getMessage());
         }
+    }
+
+    /**
+     * s3 주소 -> CDN 주소로 변환
+     */
+    public String s3AddressToCdnAddress(String s3Address) {
+        // 정규 표현식을 정의
+        Pattern pattern = Pattern.compile(s3properties.getS3UrlRegex());
+        Matcher matcher = pattern.matcher(s3Address);
+
+        // URL이 정규 표현식과 일치하면 변환
+        if (matcher.matches()) {
+            // image/ 이후 url 추출
+            String extractedPath = matcher.group(1);
+            // cdn URL 생성
+            return s3properties.getCdnUrlPrefix() + extractedPath;
+        }
+
+        // 변환되지 않은 경우 예외
+        throw new CommonException(ErrorCode.INVALID_VALUE, "이미지 업로드 실패했습니다.", "s3 url이 올바르지 않습니다.");
     }
 
     public Boolean isValidUrl(String url, String hashCode) {

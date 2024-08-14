@@ -83,3 +83,5 @@ aws:
   s3:
     post-image-path: ${s3_post_image_path}
     profile-image-path: ${s3_profile_image_path}
+    s3_url_regex: ${s3_url_regex}
+    cdn_url_prefix: ${cdn_url_prefix}

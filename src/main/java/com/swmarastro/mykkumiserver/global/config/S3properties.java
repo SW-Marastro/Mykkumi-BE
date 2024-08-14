@@ -26,5 +26,11 @@ public class S3properties {
 
     @Value("${aws.s3.profile-image-path}")
     private String profileImagePath;
+
+    @Value("${aws.s3.s3_url_regex}")
+    private String s3UrlRegex;
+
+    @Value("${aws.s3.cdn_url_prefix}")
+    private String cdnUrlPrefix;
 }
 
