@@ -18,7 +18,7 @@ public class UserSubCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_sub_category")
+    @Column(name = "user_sub_category_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)

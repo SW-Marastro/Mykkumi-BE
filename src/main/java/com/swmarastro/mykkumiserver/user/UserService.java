@@ -55,7 +55,7 @@ public class UserService {
     public User updateUser(User user, UpdateUserRequest updateUserRequest) {
         String nickname = updateUserRequest.getNickname();
         String introduction = updateUserRequest.getIntroduction();
-        String profileImageUrl = updateUserRequest.getProfileImage();
+        String profileImageUrl = awsS3Utils.s3AddressToCdnAddress(updateUserRequest.getProfileImage());
         List<Long> categoryIds = updateUserRequest.getCategoryIds();
 
         //중복된 닉네임일 때
