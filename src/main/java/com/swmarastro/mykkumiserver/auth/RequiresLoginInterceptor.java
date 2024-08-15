@@ -37,7 +37,7 @@ public class RequiresLoginInterceptor implements HandlerInterceptor {
             if (tokenService.isValidToken(token)) { //유효한 토큰인지 검증
                 UUID userUuid = tokenService.getUserUuidFromToken(token);
                 User user = userService.getUserByUuid(userUuid);
-                if(user.getNickname()==null)
+                if(requiresLogin.checkNickname() && user.getNickname()==null)
                     throw new CommonException(ErrorCode.NICKNAME_REQUIRED, "닉네임을 입력해주세요.", "닉네임이 있어야 사용할 수 있는 기능입니다.");
                 return true;
             }

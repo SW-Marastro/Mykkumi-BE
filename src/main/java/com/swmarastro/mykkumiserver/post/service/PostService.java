@@ -5,6 +5,7 @@ import com.swmarastro.mykkumiserver.category.domain.SubCategory;
 import com.swmarastro.mykkumiserver.category.domain.UserSubCategory;
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
+import com.swmarastro.mykkumiserver.global.util.AwsS3Utils;
 import com.swmarastro.mykkumiserver.global.util.Base64Utils;
 import com.swmarastro.mykkumiserver.post.PostLatestCursor;
 import com.swmarastro.mykkumiserver.post.PostRepository;
@@ -35,6 +36,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryService categoryService;
+    private final AwsS3Utils awsS3Utils;
 
     //TODO 이름에 최신순이라고 알려줘야할것 같다. 고민해보고 이름 고치기
     public PostListResponse getInfiniteScrollPosts(User user, String encodedCursor, Integer limit) {
@@ -70,7 +72,8 @@ public class PostService {
         List<PostImage> postImages = new ArrayList<>();
         Long order=1L;
         for (PostImageDto postImageDto : images) {
-            PostImage postImage = PostImage.of(postImageDto.getUrl(), order++);
+            String imageUrl = awsS3Utils.s3AddressToCdnAddress(postImageDto.getUrl());
+            PostImage postImage = PostImage.of(imageUrl, order++);
             List<Pin> pins = postImageDto.getPins().stream()
                     .map(pinDto -> {
                         Product product = Product.of(pinDto.getProductInfo().getName(), pinDto.getProductInfo().getUrl());

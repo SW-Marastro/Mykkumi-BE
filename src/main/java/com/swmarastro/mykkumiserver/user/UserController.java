@@ -18,14 +18,14 @@ public class UserController {
     private final UserService userService;
     private final ProfileImageService profileImageService;
 
-    @RequiresLogin
+    @RequiresLogin(checkNickname = false)
     @GetMapping("/users/me")
     public ResponseEntity<MeResponse> getMe(@Login User user) {
         MeResponse meResponse = userService.getMe(user);
         return ResponseEntity.ok(meResponse);
     }
 
-    @RequiresLogin
+    @RequiresLogin(checkNickname = false)
     @PatchMapping("/users")
     public ResponseEntity<MeResponse> updateUser(@Login User loginUser, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         User user = userService.updateUser(loginUser, updateUserRequest);
@@ -33,7 +33,7 @@ public class UserController {
         return ResponseEntity.ok(meResponse);
     }
 
-    @RequiresLogin
+    @RequiresLogin(checkNickname = false)
     @GetMapping("/profileImage/preSignedUrl")
     public ResponseEntity<ProfileImagePreSignedUrlResponse> getProfileImagePresignedUrl(@RequestParam String extension) {
         String url = profileImageService.generatePostImagePreSignedUrl(extension);
