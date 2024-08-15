@@ -55,7 +55,7 @@ public class UserService {
     public User updateUser(User user, UpdateUserRequest updateUserRequest) {
         String nickname = updateUserRequest.getNickname();
         String introduction = updateUserRequest.getIntroduction();
-        String profileImageUrl = awsS3Utils.s3AddressToCdnAddress(updateUserRequest.getProfileImage());
+        String profileImageUrl = updateUserRequest.getProfileImage();
         List<Long> categoryIds = updateUserRequest.getCategoryIds();
 
         //중복된 닉네임일 때
@@ -65,6 +65,7 @@ public class UserService {
 
         //프로필 이미지 이미 존재 시, 기존 이미지 삭제
         if(profileImageUrl != null && user.getProfileImage()!=null) {
+            profileImageUrl = awsS3Utils.s3AddressToCdnAddress(profileImageUrl);
             awsS3Utils.deleteImageByUrl(user.getProfileImage());
         }
 
