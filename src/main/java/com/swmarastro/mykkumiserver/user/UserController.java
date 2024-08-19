@@ -36,8 +36,7 @@ public class UserController {
     @RequiresLogin(checkNickname = false)
     @GetMapping("/profileImage/preSignedUrl")
     public ResponseEntity<ProfileImagePreSignedUrlResponse> getProfileImagePresignedUrl(@RequestParam String extension) {
-        String url = profileImageService.generatePostImagePreSignedUrl(extension);
-        ProfileImagePreSignedUrlResponse response = ProfileImagePreSignedUrlResponse.of(url);
+        ProfileImagePreSignedUrlResponse response = profileImageService.generatePostImagePreSignedUrl(extension);
         return ResponseEntity.ok(response);
     }
 }

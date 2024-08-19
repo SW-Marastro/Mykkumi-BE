@@ -7,11 +7,13 @@ import lombok.Getter;
 @Getter
 public class ProfileImagePreSignedUrlResponse {
 
-    private String url;
+    private String presignedUrl;
+    private String cdnUrl;
 
-    public static ProfileImagePreSignedUrlResponse of(String url) {
+    public static ProfileImagePreSignedUrlResponse of(String presignedUrl, String cdnUrl) {
         return ProfileImagePreSignedUrlResponse.builder()
-                .url(url)
+                .presignedUrl(presignedUrl)
+                .cdnUrl(cdnUrl)
                 .build();
     }
 }
