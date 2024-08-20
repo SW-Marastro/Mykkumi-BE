@@ -41,11 +41,13 @@ public class PostDto {
     @Getter
     @Builder
     static class Writer {
+        private String uuid;
         private String profileImage;
         private String nickname;
 
         static public Writer of(User user) {
             return Writer.builder()
+                    .uuid(user.getUuid().toString())
                     .profileImage(user.getProfileImage())
                     .nickname(user.getNickname())
                     .build();
