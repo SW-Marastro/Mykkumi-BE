@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
@@ -17,6 +18,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "WHERE p.id < :lastId AND p.isDeleted = false AND p.subCategory.id IN :categoryIds " +
             "ORDER BY p.id DESC")
     List<Post> findLatestOrderByIdDescInSubCategory(Long lastId, List<Long> categoryIds, Pageable pageable);
-
 
 }
