@@ -25,6 +25,7 @@ public class UserSubCategory extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(nullable = false)
     private String subCategory;
 
     public static String listToString(List<Long> categoryIds) {

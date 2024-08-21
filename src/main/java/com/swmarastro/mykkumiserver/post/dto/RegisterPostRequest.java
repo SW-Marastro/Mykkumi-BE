@@ -7,7 +7,7 @@ import java.util.List;
 @Getter
 public class RegisterPostRequest {
 
-    private Long subCategoryId;
+    private Long subCategoryId = null;
     private String content;
     private List<PostImageDto> images;
 }

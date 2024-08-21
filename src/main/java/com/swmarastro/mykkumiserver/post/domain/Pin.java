@@ -25,7 +25,10 @@ public class Pin extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(nullable = false)
     private Double positionX;
+
+    @Column(nullable = false)
     private Double positionY;
 
     public static Pin of(PostImage postImage, Product product, Double positionX, Double positionY) {

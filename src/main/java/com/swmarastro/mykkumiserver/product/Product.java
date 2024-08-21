@@ -16,6 +16,7 @@ public class Product extends BaseEntity {
     @Column(name = "product_id")
     private Long id;
 
+    @Column(nullable = false)
     private String productName;
     private String productUrl;
 

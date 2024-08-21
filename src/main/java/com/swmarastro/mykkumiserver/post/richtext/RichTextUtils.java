@@ -3,6 +3,7 @@ package com.swmarastro.mykkumiserver.post.richtext;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,8 +33,8 @@ public class RichTextUtils {
             }
 
             // 해시태그 부분 추출
-            String hashtagText = matcher.group();
-            result.add(hashtagText);
+            String[] hashtags = matcher.group().split("(?=#)");
+            Collections.addAll(result, hashtags);
 
             lastIndex = matcher.end();
         }

@@ -25,6 +25,7 @@ public class PostImage extends BaseEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
+    @Column(nullable = false)
     private Long orderList;
 
     @OneToMany(mappedBy = "postImage", cascade = CascadeType.ALL, orphanRemoval = true)
