@@ -7,6 +7,7 @@ import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
 import com.swmarastro.mykkumiserver.global.util.AwsS3Utils;
 import com.swmarastro.mykkumiserver.global.util.Base64Utils;
+import com.swmarastro.mykkumiserver.hashtag.*;
 import com.swmarastro.mykkumiserver.post.PostLatestCursor;
 import com.swmarastro.mykkumiserver.post.PostRepository;
 import com.swmarastro.mykkumiserver.post.domain.Pin;
@@ -36,7 +37,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryService categoryService;
-    private final AwsS3Utils awsS3Utils;
+    private final HashtagService hashtagService;
 
     //TODO 이름에 최신순이라고 알려줘야할것 같다. 고민해보고 이름 고치기
     public PostListResponse getInfiniteScrollPosts(User user, String encodedCursor, Integer limit) {
@@ -72,6 +73,7 @@ public class PostService {
         //content -> rich text로 변환
         List<String> contentTexts = RichTextUtils.extractPlainTextAndHashtags(content);
         List<PostContentObject> postContentObjects = RichTextUtils.makePostContentStringToRichText(contentTexts);
+
         SubCategory subCategory = categoryService.getSubCategoryById(subCategoryId);
 
         List<PostImage> postImages = new ArrayList<>();
@@ -91,6 +93,8 @@ public class PostService {
 
         Post post = Post.of(postContentObjects, user, subCategory, postImages);
         Post savedPost = postRepository.save(post);
+
+        saveHashtags(contentTexts, savedPost);
 
         return savedPost.getId();
     }
@@ -145,5 +149,20 @@ public class PostService {
                 .map(PostDto::getId)
                 .min(Long::compareTo)
                 .orElse(0L);
+    }
+
+    private void saveHashtags(List<String> contentTexts, Post savedPost) {
+        contentTexts.stream()
+                .filter(contentText -> contentText.startsWith("#")) // 해시태그인 경우 필터링
+                .map(contentText -> contentText.substring(1)) // 해시태그 이름만 추출
+                .map(hashtagName -> {
+                    Hashtag hashtag = hashtagService.findByName(hashtagName);
+                    if (hashtag == null) {
+                        hashtag = Hashtag.of(hashtagName);
+                        hashtagService.saveHashtag(hashtag); // 새 해시태그 저장
+                    }
+                    return PostHashtag.of(savedPost, hashtag); // PostHashtag 생성
+                })
+                .forEach(hashtagService::savePostHashtag); // PostHashtag 저장
     }
 }
