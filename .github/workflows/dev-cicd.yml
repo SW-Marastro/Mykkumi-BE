@@ -69,7 +69,7 @@ jobs:
         shell: bash
 
       - name: Build with Gradle 
-        run: ./gradlew build --args='--spring.profiles.active=dev'
+        run: ./gradlew build -Dspring.profiles.active=dev
         shell: bash
 
       - name: Remove Github Actions IP from security group
@@ -135,7 +135,7 @@ jobs:
           aws ec2 authorize-security-group-ingress --group-id ${{ env.AWS_SG_ID }} --protocol tcp --port 3306 --cidr ${ip_address}/32
       
       - name: Build with Gradle
-        run: ./gradlew build --args='--spring.profiles.active=dev'
+        run: ./gradlew build -Dspring.profiles.active=dev
         shell: bash
 
       - name: Remove Github Actions IP from security group
