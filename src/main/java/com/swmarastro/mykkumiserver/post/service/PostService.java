@@ -39,7 +39,6 @@ public class PostService {
     private final CategoryService categoryService;
     private final HashtagService hashtagService;
 
-    //TODO 이름에 최신순이라고 알려줘야할것 같다. 고민해보고 이름 고치기
     public PostListResponse getInfiniteScrollPosts(User user, String encodedCursor, Integer limit) {
         if (limit <= 0 || limit > 10)
             throw new CommonException(ErrorCode.INVALID_VALUE, "limit 값이 올바르지 않습니다.", "limit 값은 1<=limit<=10 이어야 합니다.");
