@@ -32,7 +32,7 @@ public class PostDto {
                 .id(post.getId())
                 .images(postImageDtos)
                 .subCategory(post.getSubCategory().getName())
-                .category(post.getSubCategory().getCategory().getName()) //TODO 너무 .get.get인지 고민
+                .category(post.getSubCategory().getCategory().getName())
                 .content(post.getContent())
                 .writer(Writer.of(writer))
                 .build();
