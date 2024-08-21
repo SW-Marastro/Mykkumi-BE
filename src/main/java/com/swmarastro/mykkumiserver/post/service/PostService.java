@@ -65,6 +65,10 @@ public class PostService {
 
     public Long registerPost(User user, Long subCategoryId, String content, List<PostImageDto> images) {
 
+        if (subCategoryId == null) {
+            throw new CommonException(ErrorCode.MISSING_REQUIRED_FIELD, "카테고리를 입력해주세요.", "카테고리를 입력해주세요.");
+        }
+
         //content -> rich text로 변환
         List<String> contentTexts = RichTextUtils.extractPlainTextAndHashtags(content);
         List<PostContentObject> postContentObjects = RichTextUtils.makePostContentStringToRichText(contentTexts);
