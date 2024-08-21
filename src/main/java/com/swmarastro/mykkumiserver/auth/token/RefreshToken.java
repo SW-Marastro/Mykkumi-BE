@@ -20,14 +20,16 @@ public class RefreshToken extends BaseEntity {
     @Column(name = "refresh_token_id", updatable = false, nullable = false)
     public Long id;
 
-    @Column(updatable = false, unique = true)
+    @Column(updatable = false, unique = true, nullable = false)
     private UUID uuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(nullable = false)
     private String refreshToken;
+    @Column(nullable = false)
     private Date tokenExpiry;
 
     public static RefreshToken of(User user, String token, Date expiry, UUID uuid) {

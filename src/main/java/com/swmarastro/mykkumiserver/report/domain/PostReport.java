@@ -17,19 +17,21 @@ public class PostReport {
     @Column(name = "post_repost_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "reporter_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reporter_id", nullable = false)
     private User reporter;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PostReportReason reason;
 
     private String content;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReportStatus status;
 

@@ -1,5 +1,6 @@
 package com.swmarastro.mykkumiserver.hashtag;
 
+import com.swmarastro.mykkumiserver.global.BaseEntity;
 import com.swmarastro.mykkumiserver.post.domain.Post;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostHashtag {
+public class PostHashtag extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
