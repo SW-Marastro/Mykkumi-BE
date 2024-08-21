@@ -64,6 +64,7 @@ public class PostService {
     }
 
     public Long registerPost(User user, Long subCategoryId, String content, List<PostImageDto> images) {
+
         //content -> rich text로 변환
         List<String> contentTexts = RichTextUtils.extractPlainTextAndHashtags(content);
         List<PostContentObject> postContentObjects = RichTextUtils.makePostContentStringToRichText(contentTexts);
@@ -72,7 +73,7 @@ public class PostService {
         List<PostImage> postImages = new ArrayList<>();
         Long order=1L;
         for (PostImageDto postImageDto : images) {
-            String imageUrl = awsS3Utils.s3AddressToCdnAddress(postImageDto.getUrl());
+            String imageUrl = postImageDto.getUrl();
             PostImage postImage = PostImage.of(imageUrl, order++);
             List<Pin> pins = postImageDto.getPins().stream()
                     .map(pinDto -> {
