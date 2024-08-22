@@ -25,13 +25,13 @@ public class PostReport {
     @JoinColumn(name = "reporter_id", nullable = false)
     private User reporter;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "enum")
     @Enumerated(EnumType.STRING)
     private PostReportReason reason;
 
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "enum")
     @Enumerated(EnumType.STRING)
     private ReportStatus status;
 

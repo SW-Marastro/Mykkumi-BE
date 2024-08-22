@@ -31,6 +31,7 @@ public class User extends BaseEntity {
     private String profileImage;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(columnDefinition = "enum")
     private OAuthProvider provider;
 
     @OneToOne(mappedBy = "user")
