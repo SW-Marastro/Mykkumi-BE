@@ -61,7 +61,7 @@ public class ReportService {
         }
 
         //아니라면 신고 DB에 추가
-        PostReport postReport = PostReport.of(reporter, postReportRequest.getReason(), postReportRequest.getContent());
+        PostReport postReport = PostReport.of(post, reporter, postReportRequest.getReason(), postReportRequest.getContent());
         postReportRepository.save(postReport);
 
         return PostReportResponse.of("신고가 접수되었습니다.");

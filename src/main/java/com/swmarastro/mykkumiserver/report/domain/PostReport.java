@@ -37,8 +37,9 @@ public class PostReport {
 
     private String result;
 
-    public static PostReport of(User reporter, String reason, String content) {
+    public static PostReport of(Post post, User reporter, String reason, String content) {
         return PostReport.builder()
+                .post(post)
                 .reporter(reporter)
                 .reason(PostReportReason.of(reason))
                 .content(content)
