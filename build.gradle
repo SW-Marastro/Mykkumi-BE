@@ -57,6 +57,9 @@ dependencies {
     // json-simple for JSON processing
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+    //MongoDB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
 }
 
 tasks.named('test') {
