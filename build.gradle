@@ -49,7 +49,7 @@ dependencies {
     // Jackson for JSON processing
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.0'
 
     // Nimbus JOSE + JWT for JWT processing
     implementation 'com.nimbusds:nimbus-jose-jwt:9.11.1'
