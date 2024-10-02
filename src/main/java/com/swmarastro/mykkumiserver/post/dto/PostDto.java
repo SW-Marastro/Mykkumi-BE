@@ -1,9 +1,11 @@
 package com.swmarastro.mykkumiserver.post.dto;
 
 import com.swmarastro.mykkumiserver.post.domain.Post;
+import com.swmarastro.mykkumiserver.post.domain.PostView;
 import com.swmarastro.mykkumiserver.post.richtext.PostContentObject;
 import com.swmarastro.mykkumiserver.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 @Builder
 public class PostDto {
 
+    @Id
     private Long id;
     private String category;
     private String subCategory;
@@ -38,20 +41,15 @@ public class PostDto {
                 .build();
     }
 
-    @Getter
-    @Builder
-    static class Writer {
-        private String uuid;
-        private String profileImage;
-        private String nickname;
-
-        static public Writer of(User user) {
-            return Writer.builder()
-                    .uuid(user.getUuid().toString())
-                    .profileImage(user.getProfileImage())
-                    .nickname(user.getNickname())
-                    .build();
-        }
+    public static PostDto of(PostView postView) {
+        return PostDto.builder()
+                .id(postView.getId())
+                .category(postView.getCategory())
+                .subCategory(postView.getSubCategory())
+                .writer(postView.getWriter())
+                .content(postView.getContent())
+                .images(postView.getImages())
+                .build();
     }
 
 }
