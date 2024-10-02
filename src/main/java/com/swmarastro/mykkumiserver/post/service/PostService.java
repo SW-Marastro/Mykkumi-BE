@@ -23,6 +23,7 @@ import com.swmarastro.mykkumiserver.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -98,6 +99,9 @@ public class PostService {
 
         Post post = Post.of(postContentObjects, user, subCategory, postImages);
         Post savedPost = postRepository.save(post); //mysql 저장 완료
+
+        Hibernate.initialize(post.getSubCategory());
+        Hibernate.initialize(post.getSubCategory().getCategory());
 
         eventPublisher.publishEvent(new PostCreatedEvent(post, subCategory.getCategory(), user, images));
 
