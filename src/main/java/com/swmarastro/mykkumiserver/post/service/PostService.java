@@ -5,15 +5,17 @@ import com.swmarastro.mykkumiserver.category.domain.SubCategory;
 import com.swmarastro.mykkumiserver.category.domain.UserSubCategory;
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
-import com.swmarastro.mykkumiserver.global.util.AwsS3Utils;
 import com.swmarastro.mykkumiserver.global.util.Base64Utils;
 import com.swmarastro.mykkumiserver.hashtag.*;
 import com.swmarastro.mykkumiserver.post.PostLatestCursor;
+import com.swmarastro.mykkumiserver.post.PostMongoRepository;
 import com.swmarastro.mykkumiserver.post.PostRepository;
 import com.swmarastro.mykkumiserver.post.domain.Pin;
 import com.swmarastro.mykkumiserver.post.domain.Post;
 import com.swmarastro.mykkumiserver.post.domain.PostImage;
+import com.swmarastro.mykkumiserver.post.domain.PostView;
 import com.swmarastro.mykkumiserver.post.dto.*;
+import com.swmarastro.mykkumiserver.post.event.PostCreatedEvent;
 import com.swmarastro.mykkumiserver.post.richtext.PostContentObject;
 import com.swmarastro.mykkumiserver.post.richtext.RichTextUtils;
 import com.swmarastro.mykkumiserver.product.Product;
@@ -21,11 +23,13 @@ import com.swmarastro.mykkumiserver.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +42,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final CategoryService categoryService;
     private final HashtagService hashtagService;
+    private final PostMongoRepository postMongoRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public PostListResponse getInfiniteScrollPosts(User user, String encodedCursor, Integer limit) {
         if (limit <= 0 || limit > 10)
@@ -91,7 +97,9 @@ public class PostService {
         }
 
         Post post = Post.of(postContentObjects, user, subCategory, postImages);
-        Post savedPost = postRepository.save(post);
+        Post savedPost = postRepository.save(post); //mysql 저장 완료
+
+        eventPublisher.publishEvent(new PostCreatedEvent(post, subCategory.getCategory(), user, images));
 
         saveHashtags(contentTexts, savedPost);
 
@@ -119,10 +127,12 @@ public class PostService {
 
     private List<PostDto> getPostsByCursorAndLimitAndUserCategory(PostLatestCursor cursor, Integer limit, List<Long> categoryIds) {
         try {
-            List<Post> postList = postRepository.findLatestOrderByIdDescInSubCategory(cursor.getPostId(), categoryIds, Pageable.ofSize(limit));
-            return postList.stream()
-                    .map(post -> PostDto.of(post, post.getUser()))
-                    .collect(Collectors.toList());
+            List<Long> postIdList = postRepository.findIdLatestOrderByIdDescInSubcategory(cursor.getPostId(), categoryIds, Pageable.ofSize(limit));
+            List<PostView> postViews = postMongoRepository.findAllById(postIdList);
+
+            // postIdList 순서대로 postViews 정렬
+            postViews.sort(Comparator.comparing(postView -> postIdList.indexOf(postView.getId())));
+            return postViews.stream().map(PostDto::of).collect(Collectors.toList());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -132,10 +142,12 @@ public class PostService {
 
     private List<PostDto> getPostsByCursorAndLimit(PostLatestCursor cursor, Integer limit) {
         try {
-            List<Post> postList = postRepository.findLatestOrderByIdDesc(cursor.getPostId(), Pageable.ofSize(limit));
-            return postList.stream()
-                    .map(post -> PostDto.of(post, post.getUser()))
-                    .collect(Collectors.toList());
+            List<Long> postIdList = postRepository.findIdLatestOrderByIdDesc(cursor.getPostId(), Pageable.ofSize(limit));
+            List<PostView> postViews = postMongoRepository.findAllById(postIdList);
+
+            // postIdList 순서대로 postViews 정렬
+            postViews.sort(Comparator.comparing(postView -> postIdList.indexOf(postView.getId())));
+            return postViews.stream().map(PostDto::of).collect(Collectors.toList());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
