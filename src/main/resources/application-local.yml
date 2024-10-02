@@ -1,0 +1,7 @@
+spring:
+  config:
+    import:
+      - 'aws-secretsmanager:local/mykkumi/mysql'
+      - 'aws-secretsmanager:dev/mykkumi/s3'
+      - 'aws-secretsmanager:dev/mykkumi/jwt'
+      - 'aws-secretsmanager:dev/mykkumi/oauth'
