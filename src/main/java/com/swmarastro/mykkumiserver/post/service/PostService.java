@@ -180,4 +180,9 @@ public class PostService {
                 })
                 .forEach(hashtagService::savePostHashtag); // PostHashtag 저장
     }
+
+    public Post findById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND, "포스트가 존재하지 않습니다.", "포스트가 존재하지 않습니다."));
+    }
 }
