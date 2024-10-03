@@ -13,16 +13,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/likes")
 @RequiredArgsConstructor
 public class LikesController {
 
     private final LikesService likeService;
 
     @RequiresLogin
-    @PostMapping("/likes")
+    @PostMapping("/like")
     public ResponseEntity<LikesResponse> like(@Login User user, @RequestBody LikesRequest request) {
         LikesResponse response = LikesResponse.of(likeService.like(user, request.getPostId()));
+        return ResponseEntity.ok(response);
+    }
+
+    @RequiresLogin
+    @PostMapping("/unlike")
+    public ResponseEntity<LikesResponse> unlike(@Login User user, @RequestBody LikesRequest request) {
+        LikesResponse response = LikesResponse.of(likeService.unlike(user, request.getPostId()));
         return ResponseEntity.ok(response);
     }
 }

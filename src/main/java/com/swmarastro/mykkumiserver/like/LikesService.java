@@ -39,4 +39,24 @@ public class LikesService {
         //있는데 이미 눌린상태 -> 이미 좋아요 누른 포스트입니다.
         throw new CommonException(ErrorCode.ALREADY_EXISTS, "이미 좋아요를 누른 포스트입니다.", "이미 좋아요를 누른 포스트입니다.");
     }
+
+    public Boolean unlike(User user, Long postId) {
+        Post post = postService.findById(postId);
+
+        //like가 테이블에 있는지 확인
+        Optional<Likes> optionalLike = likeRepository.findByPostAndUser(post, user);
+
+        //없음 -> 좋아요를 취소할 수 없습니다.
+        if(optionalLike.isEmpty()) {
+            //TODO 이게 not_found가 맞는지 뭘쓸지 모르겠다
+            throw new CommonException(ErrorCode.NOT_FOUND, "좋아요를 취소할 수 없습니다.", "좋아요를 취소할 수 없습니다.");
+        }
+
+        //있음 -> 좋아요 취소
+        Likes likes = optionalLike.get();
+        return likes.unlike();
+
+        //TODO 좋아요가 이미 취소된 상태 -> 그냥 success 보내고 가만히 있으면 되지않나
+    }
+
 }
