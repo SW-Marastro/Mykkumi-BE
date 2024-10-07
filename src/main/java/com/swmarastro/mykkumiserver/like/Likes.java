@@ -11,6 +11,9 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "likes", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"post_id", "user_id"})
+})
 public class Likes extends BaseEntity {
 
     @Id
