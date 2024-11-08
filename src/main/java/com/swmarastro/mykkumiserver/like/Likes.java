@@ -31,6 +31,9 @@ public class Likes extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @Version
+    private Long version;
+
     public static Likes of(Post post, User user) {
         return Likes.builder()
                 .post(post)
