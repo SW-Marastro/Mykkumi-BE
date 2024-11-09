@@ -2,14 +2,17 @@ package com.swmarastro.mykkumiserver.like;
 
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
+import com.swmarastro.mykkumiserver.post.PostRepository;
 import com.swmarastro.mykkumiserver.post.domain.Post;
-import com.swmarastro.mykkumiserver.post.service.PostService;
 import com.swmarastro.mykkumiserver.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,11 +20,11 @@ import java.util.Optional;
 public class LikesService {
 
     private final LikesRepository likeRepository;
-    private final PostService postService;
+    private final PostRepository postRepository;
 
     public Boolean like(User user, Long postId) {
 
-        Post post = postService.findById(postId);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND, "해당 포스트가 존재하지 않습니다.", "해당 포스트가 존재하지 않습니다."));
 
         //like가 테이블에 있는지 확인
         Optional<Likes> optionalLike = likeRepository.findByPostAndUser(post, user);
@@ -41,7 +44,7 @@ public class LikesService {
     }
 
     public Boolean unlike(User user, Long postId) {
-        Post post = postService.findById(postId);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND, "해당 포스트가 존재하지 않습니다.", "해당 포스트가 존재하지 않습니다."));
 
         //like가 테이블에 있는지 확인
         Optional<Likes> optionalLike = likeRepository.findByPostAndUser(post, user);
@@ -59,4 +62,15 @@ public class LikesService {
         //TODO 좋아요가 이미 취소된 상태 -> 그냥 success 보내고 가만히 있으면 되지않나
     }
 
+    public List<Boolean> isLikedByUser(User user, List<Long> postIds) {
+        List<Map<String, Object>> results = likeRepository.findPostLikesStatus(postIds, user.getId());
+        Map<Long, Boolean> likeStatusMap = results.stream()
+                .collect(Collectors.toMap(
+                        result -> ((Number) result.get("postId")).longValue(),
+                        result -> ((Number) result.get("isLiked")).intValue() == 1 // 변환 로직 추가
+                ));
+        return postIds.stream()
+                .map(postId -> likeStatusMap.getOrDefault(postId, false))
+                .collect(Collectors.toList());
+    }
 }
