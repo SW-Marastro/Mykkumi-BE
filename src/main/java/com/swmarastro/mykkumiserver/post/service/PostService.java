@@ -62,13 +62,11 @@ public class PostService {
             categoryIds = UserSubCategory.stringToList(userSubCategories.getSubCategory());
             posts = getPostsByCursorAndLimitAndUserCategory(cursor, limit + 1, categoryIds); //포스트 가져오기
         }
-
+        setLikes(posts, user); //좋아요 눌렀는지 세팅
         if (posts.size() < limit + 1) { //다음에 조회할 내용 없음
             return PostListResponse.end(posts);
         }
         posts.removeLast();
-
-        setLikes(posts, user); //좋아요 눌렀는지 세팅
 
         Long lastId = getLastIdFromPostList(posts);
         PostLatestCursor nextCursor = PostLatestCursor.of(cursor.getStartedAt(), lastId);
@@ -76,6 +74,8 @@ public class PostService {
     }
 
     private void setLikes(List<PostDto> posts, User user) {
+        setLikesCount(posts);
+
         if (user == null) {
             for (PostDto post : posts) {
                 post.updateLikedNByCurrentUser(false);
@@ -86,6 +86,15 @@ public class PostService {
         List<Boolean> likedByUser = likesService.isLikedByUser(user, postIds);
         for (int i = 0; i < posts.size(); i++) {
             posts.get(i).updateLikedNByCurrentUser(likedByUser.get(i));
+        }
+    }
+
+    private void setLikesCount(List<PostDto> posts) {
+        //TODO 모아서 한번에 10개 디비에서 조회해오기 vs 그냥 하나씩 하기
+        for (int i = 0; i < posts.size(); i++) {
+            Long postId = posts.get(i).getId();
+            Long postLikeCount = likesService.getPostLikeCount(postId);
+            posts.get(i).updateLikeCount(postLikeCount);
         }
     }
 

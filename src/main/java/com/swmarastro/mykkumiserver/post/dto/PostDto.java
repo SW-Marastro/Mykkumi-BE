@@ -58,4 +58,8 @@ public class PostDto {
         this.likedByCurrentUser = likedByCurrentUser;
     }
 
+    public void updateLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
+
 }
