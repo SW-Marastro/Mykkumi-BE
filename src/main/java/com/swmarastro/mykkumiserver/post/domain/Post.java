@@ -39,6 +39,8 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImages = new ArrayList<>();
 
+    private Long likeCount = 0L;
+
     public List<PostImage> getOrderedPostImages() {
         return postImages.stream()
                 .sorted(Comparator.comparing(PostImage::getOrderList))

@@ -22,6 +22,8 @@ public class PostDto {
     private String category;
     private String subCategory;
     private Writer writer;
+    private Long likeCount;
+    private Boolean likedByCurrentUser;
     private List<PostContentObject> content;
     private List<PostImageDto> images;
 
@@ -50,6 +52,14 @@ public class PostDto {
                 .content(postView.getContent())
                 .images(postView.getImages())
                 .build();
+    }
+
+    public void updateLikedNByCurrentUser(Boolean likedByCurrentUser) {
+        this.likedByCurrentUser = likedByCurrentUser;
+    }
+
+    public void updateLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
     }
 
 }

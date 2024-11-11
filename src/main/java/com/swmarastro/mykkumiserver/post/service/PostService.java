@@ -7,6 +7,7 @@ import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
 import com.swmarastro.mykkumiserver.global.util.Base64Utils;
 import com.swmarastro.mykkumiserver.hashtag.*;
+import com.swmarastro.mykkumiserver.like.LikesService;
 import com.swmarastro.mykkumiserver.post.PostLatestCursor;
 import com.swmarastro.mykkumiserver.post.PostMongoRepository;
 import com.swmarastro.mykkumiserver.post.PostRepository;
@@ -45,6 +46,7 @@ public class PostService {
     private final HashtagService hashtagService;
     private final PostMongoRepository postMongoRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final LikesService likesService;
 
     public PostListResponse getInfiniteScrollPosts(User user, String encodedCursor, Integer limit) {
         if (limit <= 0 || limit > 10)
@@ -60,14 +62,40 @@ public class PostService {
             categoryIds = UserSubCategory.stringToList(userSubCategories.getSubCategory());
             posts = getPostsByCursorAndLimitAndUserCategory(cursor, limit + 1, categoryIds); //포스트 가져오기
         }
-
+        setLikes(posts, user); //좋아요 눌렀는지 세팅
         if (posts.size() < limit + 1) { //다음에 조회할 내용 없음
             return PostListResponse.end(posts);
         }
         posts.removeLast();
+
         Long lastId = getLastIdFromPostList(posts);
         PostLatestCursor nextCursor = PostLatestCursor.of(cursor.getStartedAt(), lastId);
         return PostListResponse.of(posts, Base64Utils.encode(nextCursor));
+    }
+
+    private void setLikes(List<PostDto> posts, User user) {
+        setLikesCount(posts);
+
+        if (user == null) {
+            for (PostDto post : posts) {
+                post.updateLikedNByCurrentUser(false);
+            }
+            return;
+        }
+        List<Long> postIds = extractPostIds(posts);
+        List<Boolean> likedByUser = likesService.isLikedByUser(user, postIds);
+        for (int i = 0; i < posts.size(); i++) {
+            posts.get(i).updateLikedNByCurrentUser(likedByUser.get(i));
+        }
+    }
+
+    private void setLikesCount(List<PostDto> posts) {
+        //TODO 모아서 한번에 10개 디비에서 조회해오기 vs 그냥 하나씩 하기
+        for (int i = 0; i < posts.size(); i++) {
+            Long postId = posts.get(i).getId();
+            Long postLikeCount = likesService.getPostLikeCount(postId);
+            posts.get(i).updateLikeCount(postLikeCount);
+        }
     }
 
     public Long registerPost(User user, Long subCategoryId, String content, List<PostImageDto> images) {
@@ -180,4 +208,16 @@ public class PostService {
                 })
                 .forEach(hashtagService::savePostHashtag); // PostHashtag 저장
     }
+
+    public Post findById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND, "포스트가 존재하지 않습니다.", "포스트가 존재하지 않습니다."));
+    }
+
+    private List<Long> extractPostIds(List<PostDto> posts) {
+        return posts.stream()
+                .map(PostDto::getId)
+                .collect(Collectors.toList());
+    }
+
 }

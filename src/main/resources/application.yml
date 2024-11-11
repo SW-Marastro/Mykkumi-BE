@@ -11,6 +11,10 @@ spring:
     mongodb:
       uri: ${mongodb_uri}
 
+    redis:
+      host: ${redis_host}
+      port: ${redis_port}
+
   jpa:
     hibernate:
       ddl-auto: validate
