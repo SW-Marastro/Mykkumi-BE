@@ -23,4 +23,8 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
             "LEFT JOIN likes l ON p.post_id = l.post_id AND l.user_id = :userId " +
             "WHERE p.post_id IN :postIds", nativeQuery = true)
     List<Map<String, Object>> findPostLikesStatus(List<Long> postIds, Long userId);
+
+    @Query(value = "SELECT COUNT(l) FROM Likes l " +
+        "WHERE l.post.id = :postId AND l.isDeleted = false")
+    Long findPostLikeCountByPostId(Long postId);
 }

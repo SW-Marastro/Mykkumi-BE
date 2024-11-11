@@ -2,10 +2,13 @@ package com.swmarastro.mykkumiserver.like;
 
 import com.swmarastro.mykkumiserver.global.exception.CommonException;
 import com.swmarastro.mykkumiserver.global.exception.ErrorCode;
+import com.swmarastro.mykkumiserver.global.util.RedisUtils;
 import com.swmarastro.mykkumiserver.post.PostRepository;
 import com.swmarastro.mykkumiserver.post.domain.Post;
+import com.swmarastro.mykkumiserver.post.event.PostLikeCountCacheMissEvent;
 import com.swmarastro.mykkumiserver.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,11 @@ public class LikesService {
 
     private final LikesRepository likeRepository;
     private final PostRepository postRepository;
+    private final RedisUtils redisUtils;
+    private final ApplicationEventPublisher eventPublisher;
+
+    private static final String POST_LIKE_KEY_PREFIX = "post:";
+    private static final String POST_LIKE_KEY_SUFFIX = ":likes";
 
     public Boolean like(User user, Long postId) {
 
@@ -50,7 +58,7 @@ public class LikesService {
         Optional<Likes> optionalLike = likeRepository.findByPostAndUser(post, user);
 
         //없음 -> 좋아요를 취소할 수 없습니다.
-        if(optionalLike.isEmpty()) {
+        if (optionalLike.isEmpty()) {
             //TODO 이게 not_found가 맞는지 뭘쓸지 모르겠다
             throw new CommonException(ErrorCode.NOT_FOUND, "좋아요를 취소할 수 없습니다.", "좋아요를 취소할 수 없습니다.");
         }
@@ -73,4 +81,21 @@ public class LikesService {
                 .map(postId -> likeStatusMap.getOrDefault(postId, false))
                 .collect(Collectors.toList());
     }
+
+    public Long getPostLikeCount(Long postId) {
+        Long value = redisUtils.getLongValues(makePostLikeKey(postId));
+        if (value != null) {
+            return value;
+        }
+        //없으면 DB에서 조회
+        Long postLikeCount = likeRepository.findPostLikeCountByPostId(postId);
+        //redis 갱신하도록 이벤트 던지기
+        eventPublisher.publishEvent(new PostLikeCountCacheMissEvent(postId, postLikeCount));
+        return postLikeCount;
+    }
+
+    private String makePostLikeKey(Long postId) {
+        return POST_LIKE_KEY_PREFIX + postId + POST_LIKE_KEY_SUFFIX;
+    }
+
 }
